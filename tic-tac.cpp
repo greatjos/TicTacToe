@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -16,6 +15,7 @@ bool checkWinnerCpu(bool**& win_board_cpu);
 bool blockPlayer(bool**& win_board,vector<int>& save_num,int& place);
 bool cpuWin(bool**& win_board_cpu,vector<int>& save_num,int& place);
 void destroy(bool**& win_board,bool**& win_board_cpu,string**& board);
+void clear(string**& board,bool**& win_board_cpu,bool**& win_board);
 void rules();
 
 
@@ -38,8 +38,9 @@ int main()
 	bool isRepeat;
 	int newPosition = 0;
 	createBoard(board,win_board,win_board_cpu);
+	bool gameEnded = false;
 
-	while(counts < 9)
+	do
 	{
 		if (turn == "X")
 		{
@@ -72,9 +73,9 @@ int main()
 			if (checkWinner(win_board))
 			{
 				cout << name << " has won" << endl;
-				printBoard(board);
-				destroy(win_board,win_board_cpu,board);
-				return 1;
+			//	printBoard(board);
+				gameEnded = true;
+			//	continue;
 			}
 			turn = "O";
 		}
@@ -97,17 +98,41 @@ int main()
 			if (checkWinnerCpu(win_board_cpu))
 			{
 				cout << "CPU won" << endl;
-				printBoard(board);
-				destroy(win_board,win_board_cpu,board);
-				return 1;
+			//	printBoard(board);
+				gameEnded = true;
+			//	continue;			
 			}
 			turn = "X";
 		}
 		printBoard(board);
 		cout << endl;
 		counts++;
-	}
-	cout << "Game ended in a tie" << endl;
+		if (gameEnded || counts >= 9)
+		{
+			if (!gameEnded)
+				cout << "Game ended in a tie" << endl;
+			cout << "Do you want to play again?" << endl;
+			cout << "Type 1 to play again and 0 to exit" << endl;
+			int again;
+			cin >> again;
+			while (cin.fail() || again > 1 || again < 0)
+			{
+				cout << "Please enter a number 1 or 0 ";
+				cin.clear();
+				cin.ignore(256,'\n');
+				cin >> again;
+			}
+			if (again)
+			{
+				counts = 0;
+				gameEnded = false;
+				save_num.clear();
+				clear(board,win_board_cpu,win_board);
+				createBoard(board,win_board,win_board_cpu);
+				rules();
+			}
+		}
+	} while(counts < 9 && !gameEnded);
 	destroy(win_board,win_board_cpu,board);
 	
 }
@@ -527,4 +552,16 @@ void destroy(bool**& win_board,bool**& win_board_cpu,string**& board)
 	delete[] board;
 	delete[] win_board;
 	delete[] win_board_cpu;
+}
+
+//clears the board for rematch
+void clear(string**& board,bool**& win_board_cpu,bool**& win_board)
+{
+	const int row = 3;
+	for (int i = 0; i < row; i++)
+	{
+		delete[] board[i];
+		delete[] win_board_cpu[i];
+		delete[] win_board[i];
+	}
 }
