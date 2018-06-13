@@ -73,9 +73,7 @@ int main()
 			if (checkWinner(win_board))
 			{
 				cout << name << " has won" << endl;
-			//	printBoard(board);
 				gameEnded = true;
-			//	continue;
 			}
 			turn = "O";
 		}
@@ -98,9 +96,7 @@ int main()
 			if (checkWinnerCpu(win_board_cpu))
 			{
 				cout << "CPU won" << endl;
-			//	printBoard(board);
 				gameEnded = true;
-			//	continue;			
 			}
 			turn = "X";
 		}
@@ -128,7 +124,6 @@ int main()
 				gameEnded = false;
 				save_num.clear();
 				clear(board,win_board_cpu,win_board);
-				createBoard(board,win_board,win_board_cpu);
 				rules();
 			}
 		}
@@ -558,10 +553,14 @@ void destroy(bool**& win_board,bool**& win_board_cpu,string**& board)
 void clear(string**& board,bool**& win_board_cpu,bool**& win_board)
 {
 	const int row = 3;
+	const int col = 3;
 	for (int i = 0; i < row; i++)
 	{
-		delete[] board[i];
-		delete[] win_board_cpu[i];
-		delete[] win_board[i];
+		for (int j = 0; j < col; j++)
+		{
+			board[i][j] = " ";
+			win_board[i][j] = false;
+			win_board_cpu[i][j] = false;
+		}
 	}
 }
