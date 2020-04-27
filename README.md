@@ -1,2 +1,2 @@
 # TicTacToe
-TicTacToe game with smart AI
+TicTacToe game
